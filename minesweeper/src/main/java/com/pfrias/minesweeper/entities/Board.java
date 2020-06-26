@@ -8,13 +8,13 @@ public class Board {
     
     private int cols;
     private int rows;
+    private int mines;
 
     private Cell [][] board;
     private Random random;
 
     public Board(final int rows, final int cols) {
-        Preconditions.checkArgument(rows>0, "Rows should be positive integer");
-        Preconditions.checkArgument(cols >0, "Cols should be positive integer");
+        areValidRowCol(rows, cols);
 
         this.cols = cols;
         this.rows = rows;
@@ -45,6 +45,8 @@ public class Board {
                 cell.setHasRedFlag(false);
 
                 board[i][j] = cell;
+
+                this.mines += cell.isHasMine()?1:0;
             }
         }
     }
@@ -87,4 +89,33 @@ public class Board {
         return str.toString();
     }
 
+    public boolean pushCell(int row, int col) {
+        areValidRowCol(row, col);
+        Cell c = getCell(row, col);
+        if(!c.isHasMine()) {
+            c.clearCellAndAdjacents();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int getClearedCells() {
+        Cell c;
+        int clearedCells=0;
+
+        for(int i=0; i<rows; i++) {
+            for(int j=0; j<cols; j++) {
+                c = getCell(i,j);
+                clearedCells += (c.isClear())?1:0;
+            }
+        }
+
+        return clearedCells;
+    }
+
+    private void areValidRowCol(int row, int col) {
+        Preconditions.checkArgument(row >= 0, "Rows should be positive integer");
+        Preconditions.checkArgument(col >= 0, "Col should be positive integer");
+    }
 }
