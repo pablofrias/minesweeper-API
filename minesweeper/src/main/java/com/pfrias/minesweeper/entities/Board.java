@@ -12,6 +12,8 @@ public class Board {
 
     private Cell [][] board;
     private Random random;
+    private boolean isGameOver;
+    private boolean isGameLost;
 
     public Board(final int rows, final int cols) {
         areValidRowCol(rows, cols);
@@ -90,13 +92,13 @@ public class Board {
     }
 
     public boolean pushCell(int row, int col) {
-        areValidRowCol(row, col);
-        Cell c = getCell(row, col);
-        if(!c.isHasMine()) {
-            c.clearCellAndAdjacents();
-            return true;
+        Cell cell = getCell(row, col);
+        if (cell.isHasMine()){
+            //Game Over!
+            isGameOver = true;
+            isGameLost = true;
         } else {
-            return false;
+            return cell.clearCellAndAdjacents();
         }
     }
 
@@ -117,5 +119,27 @@ public class Board {
     private void areValidRowCol(int row, int col) {
         Preconditions.checkArgument(row >= 0, "Rows should be positive integer");
         Preconditions.checkArgument(col >= 0, "Col should be positive integer");
+    }
+
+    public void flagCell(int row, int col) {
+        Cell cell = getCell(row, col);
+        if(!cell.isClear()) {
+            getCell(row, col).setHasRedFlag(true);
+        }
+    }
+
+    public void setQuestionMark(int row, int col) {
+        Cell cell = getCell(row, col);
+        if(!cell.isClear()) {
+            getCell(row, col).setHasQuestionMark(true);
+        }
+    }
+
+    public boolean didUserLost() {
+        return isGameOver && isGameLost;
+    }
+
+    public boolean didUserWin() {
+        return isGameOver && !isGameLost;
     }
 }

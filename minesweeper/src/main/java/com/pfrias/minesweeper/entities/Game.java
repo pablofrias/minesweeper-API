@@ -43,10 +43,10 @@ public class Game {
     }
 
     public void flagCell(int row, int col){
-
+        board.flagCell(row, col);
     }
 
     public void questionCell(int row, int col) {
-
+        board.setQuestionMark(row, col);
     }
 }

@@ -54,9 +54,13 @@ public class Cell {
         return isClear;
     }
 
-    public void clearCellAndAdjacents() {
-        isClear = true;
-        clearAdjacents();
+    public boolean clearCellAndAdjacents() {
+        if (!isHasMine() && !isHasQuestionMark() && !isHasRedFlag()) {
+            isClear = true;
+            clearAdjacents();
+            return true;
+        }
+        return false;
     }
 
     public List<Cell> getAdjacents() {
